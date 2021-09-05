@@ -12,6 +12,7 @@ require('packer').startup(function(use)
     use 'christoomey/vim-tmux-runner'
     use 'metakirby5/codi.vim'
     use 'bluz71/vim-moonfly-colors'
+    use 'folke/trouble.nvim'
 
     use '~/code/blane.nvim'
 
