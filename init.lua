@@ -58,6 +58,9 @@ vim.g.maplocalleader = ' '
 
 map('n', '<leader><leader>', '<C-^>', {noremap = true, silent = true, nowait = true})
 
+map('c', 'Q', 'q', {})
+map('c', 'W', 'w', {})
+
 map('', '<C-c>', '"+y', {noremap = true, silent = true, nowait = true})
 map('', '<C-h>', '<C-w><C-h>', {noremap = true, silent = true, nowait = true})
 map('', '<C-j>', '<C-w><C-j>', {noremap = true, silent = true, nowait = true})
@@ -108,6 +111,7 @@ map('n', '<leader>wg', [[<cmd>lua require("telescope.builtin").live_grep({cwd = 
 
 --
 map('n', '<leader>x', ':write<CR> :luafile %<CR>', {noremap = true, silent = true, nowait = true})
+map('n', '<leader>vi', ':e ~/.config/nvim/init.lua<CR>', {noremap = true, silent = true, nowait = true})
 
 -- Neoterm
 -- local neoterm_map_opts = {noremap = true, silent = true, nowait = true}
@@ -191,7 +195,7 @@ vim.opt.mouse       = 'a'
 vim.opt.pumblend    = 5
 vim.opt.pumheight   = 10
 vim.opt.scrolloff   = 15
-vim.opt.shiftwidth  = 4
+vim.opt.shiftwidth  = 2
 vim.opt.showmode    = false
 vim.opt.showtabline = 1
 vim.opt.signcolumn  = 'yes'
