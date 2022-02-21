@@ -1,7 +1,20 @@
 -- Map keybinds
 local nvim_lsp = require("lspconfig")
 
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
+	-- if client.resolved_capabilities.document_formatting then
+	-- 	vim.cmd([[
+ --            augroup LspFormatting
+ --                autocmd! * <buffer>
+ --                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+ --            augroup END
+ --            ]])
+	-- end
+
+	if client.name == "gopls" or client.name == "sumneko_lua" then
+		client.resolved_capabilities.document_formatting = false
+	end
+
 	local function buf_set_keymap(...)
 		vim.api.nvim_buf_set_keymap(bufnr, ...)
 	end
@@ -13,9 +26,9 @@ local on_attach = function(_, bufnr)
 	buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 	buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 	buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-	buf_set_keymap("n", "<C-b>", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-	buf_set_keymap("n", "<C-n>", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-	buf_set_keymap("n", "<Leader>fs", ":lua vim.lsp.buf.formatting_sync()<CR>", opts)
+	buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+	buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+	buf_set_keymap("n", "<Leader>lf", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
 	require("lsp_signature").on_attach({
 		bind = true,
@@ -34,6 +47,8 @@ capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 local servers = {
 	"sumneko_lua",
 	"tsserver",
+	"rust_analyzer",
+	"gopls",
 }
 
 local config = { on_attach = on_attach, capabilities = capabilities }
@@ -80,12 +95,14 @@ local function generate_sumneko_config()
 end
 
 require("null-ls").setup({
-    debug = true,
-    sources = {
-        require("null-ls").builtins.formatting.stylua,
-        require("null-ls").builtins.formatting.prettier,
-        require("null-ls").builtins.code_actions.gitsigns,
-    },
+	debug = true,
+	sources = {
+		require("null-ls").builtins.formatting.stylua,
+		require("null-ls").builtins.formatting.prettier,
+		require("null-ls").builtins.formatting.goimports,
+		require("null-ls").builtins.code_actions.gitsigns,
+		require("null-ls").builtins.diagnostics.golangci_lint,
+	},
 })
 
 -- Setup all servers from servers table
@@ -116,3 +133,26 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 		prefix = "◉",
 	},
 })
+
+-- function org_imports(wait_ms)
+--   local params = vim.lsp.util.make_range_params()
+--   params.context = {only = {"source.organizeImports"}}
+--   local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+--   for _, res in pairs(result or {}) do
+--     for _, r in pairs(res.result or {}) do
+--       if r.edit then
+--         vim.lsp.util.apply_workspace_edit(r.edit, "utf-16")
+--       else
+--         vim.lsp.buf.execute_command(r.command)
+--       end
+--     end
+--   end
+-- end
+
+vim.cmd([[
+  augroup GO_LSP
+    autocmd!
+    autocmd BufWritePre *.go :silent! lua vim.lsp.buf.formatting()
+  augroup END
+]])
+-- autocmd BufWritePre *.go :silent! lua org_imports(3000)

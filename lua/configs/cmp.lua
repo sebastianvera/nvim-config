@@ -18,7 +18,9 @@ luasnip.config.setup({
 local lspkind = require("lspkind")
 
 cmp.setup({
-	completion = { border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }, scrollbar = "║" },
+  window = {
+    completion = { border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }, scrollbar = "║" },
+  },
 	documentation = {
 		border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
 		scrollbar = "║",
