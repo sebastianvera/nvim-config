@@ -110,6 +110,8 @@ require("packer").startup(function(use)
 		event = "BufRead",
 	})
 
+  use({ "ellisonleao/gruvbox.nvim" })
+
 	use({
 		"rose-pine/neovim",
 		as = "rose-pine",
@@ -193,4 +195,6 @@ require("packer").startup(function(use)
 		"weilbith/nvim-code-action-menu",
 		cmd = "CodeActionMenu",
 	})
+
+  use("rafamadriz/friendly-snippets")
 end)

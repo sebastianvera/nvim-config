@@ -93,26 +93,6 @@ cmp.setup({
       end,
     },
 		["<Tab>"] = cmp.mapping.disable,
-		["<C-l>"] = cmp.mapping(function(fallback)
-			if luasnip.expand_or_jumpable() then
-				vim.fn.feedkeys(t("<Plug>luasnip-expand-or-jump"), "")
-			else
-				fallback()
-			end
-		end, {
-			"i",
-			"s",
-		}),
-		["<C-h>"] = cmp.mapping(function(fallback)
-			if luasnip.jumpable(-1) then
-				vim.fn.feedkeys(t("<Plug>luasnip-jump-prev"), "")
-			else
-				fallback()
-			end
-		end, {
-			"i",
-			"s",
-		}),
 	},
 	sources = {
 		{ name = "cmp_git" },
