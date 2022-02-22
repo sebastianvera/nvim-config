@@ -110,7 +110,7 @@ require("packer").startup(function(use)
 		event = "BufRead",
 	})
 
-  use({ "ellisonleao/gruvbox.nvim" })
+	use({ "ellisonleao/gruvbox.nvim" })
 
 	use({
 		"rose-pine/neovim",
@@ -142,7 +142,22 @@ require("packer").startup(function(use)
 		"neovim/nvim-lspconfig",
 		"folke/lua-dev.nvim",
 		"ray-x/lsp_signature.nvim",
+	})
+
+	use({
 		"jose-elias-alvarez/null-ls.nvim",
+		config = function()
+			require("null-ls").setup({
+				debug = true,
+				sources = {
+					require("null-ls").builtins.formatting.stylua,
+					require("null-ls").builtins.formatting.prettier,
+					require("null-ls").builtins.formatting.goimports,
+					require("null-ls").builtins.code_actions.gitsigns,
+					require("null-ls").builtins.diagnostics.golangci_lint,
+				},
+			})
+		end,
 	})
 
 	use({
@@ -196,5 +211,5 @@ require("packer").startup(function(use)
 		cmd = "CodeActionMenu",
 	})
 
-  use("rafamadriz/friendly-snippets")
+	use("rafamadriz/friendly-snippets")
 end)
