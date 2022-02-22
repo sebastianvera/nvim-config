@@ -82,7 +82,77 @@ require("packer").startup(function(use)
 
 	use({ "nvim-telescope/telescope-fzy-native.nvim", requires = "nvim-telescope/telescope.nvim" })
 
-	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+	use({
+		"nvim-treesitter/nvim-treesitter",
+		run = ":TSUpdate",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = {
+					"go",
+					"html",
+					"javascript",
+					"markdown",
+					"python",
+					"query",
+					"rust",
+					"tsx",
+					"typescript",
+				},
+				highlight = {
+					enable = true,
+					use_languagetree = false,
+					disable = { "json" },
+					custom_captures = {},
+				},
+				autotag = {
+					enable = true,
+				},
+				textobjects = {
+					move = {
+						enable = true,
+						set_jumps = true,
+
+						goto_next_start = {
+							["]p"] = "@parameter.inner",
+							["]m"] = "@function.outer",
+							["]]"] = "@class.outer",
+						},
+						goto_next_end = {
+							["]M"] = "@function.outer",
+							["]["] = "@class.outer",
+						},
+						goto_previous_start = {
+							["[p"] = "@parameter.inner",
+							["[m"] = "@function.outer",
+							["[["] = "@class.outer",
+						},
+						goto_previous_end = {
+							["[M"] = "@function.outer",
+							["[]"] = "@class.outer",
+						},
+					},
+
+					select = {
+						enable = true,
+						keymaps = {
+							["af"] = "@function.outer",
+							["if"] = "@function.inner",
+
+							["ac"] = "@conditional.outer",
+							["ic"] = "@conditional.inner",
+
+							["aa"] = "@parameter.outer",
+							["ia"] = "@parameter.inner",
+						},
+					},
+				},
+			})
+		end,
+		requires = {
+			{ "windwp/nvim-ts-autotag", after = "nvim-treesitter" },
+			{ "nvim-treesitter/nvim-treesitter-textobjects", after = "nvim-treesitter" },
+		},
+	})
 
 	use({
 		"lukas-reineke/indent-blankline.nvim",
@@ -102,6 +172,22 @@ require("packer").startup(function(use)
 				numhl = true,
 				current_line_blame = false,
 				keymaps = {},
+				on_attach = function(bufnr)
+					local gs = package.loaded.gitsigns
+
+					local function map(mode, l, r, opts)
+						opts = opts or {}
+						opts.buffer = bufnr
+						vim.keymap.set(mode, l, r, opts)
+					end
+
+					-- Navigation
+					map("n", "]c", "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", { expr = true })
+					map("n", "[c", "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", { expr = true })
+
+					-- Actions
+					map("n", "<leader>gb", gs.toggle_current_line_blame)
+				end,
 			})
 		end,
 		requires = {
@@ -153,8 +239,8 @@ require("packer").startup(function(use)
 					require("null-ls").builtins.formatting.stylua,
 					require("null-ls").builtins.formatting.prettier,
 					require("null-ls").builtins.formatting.goimports,
-					require("null-ls").builtins.code_actions.gitsigns,
 					require("null-ls").builtins.diagnostics.golangci_lint,
+					-- require("null-ls").builtins.code_actions.gitsigns,
 				},
 			})
 		end,
@@ -163,7 +249,9 @@ require("packer").startup(function(use)
 	use({
 		"folke/todo-comments.nvim",
 		requires = "nvim-lua/plenary.nvim",
-		config = [[ require("todo-comments").setup {} ]],
+		config = function()
+			require("todo-comments").setup({})
+		end,
 	})
 
 	use({
@@ -192,6 +280,10 @@ require("packer").startup(function(use)
 		config = function()
 			require("configs.luasnip")
 		end,
+		requires = {
+			"rafamadriz/friendly-snippets",
+			after = "LuaSnip",
+		},
 	})
 
 	use({
@@ -210,6 +302,4 @@ require("packer").startup(function(use)
 		"weilbith/nvim-code-action-menu",
 		cmd = "CodeActionMenu",
 	})
-
-	use("rafamadriz/friendly-snippets")
 end)
