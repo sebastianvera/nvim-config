@@ -1,13 +1,15 @@
 local ls = require("luasnip")
 local types = require("luasnip.util.types")
 
--- ls.filetype_set("cpp", { "c" })
+ls.config.setup({
+	-- Do not jump to snippet if i'm outside of it
+	-- https://github.com/L3MON4D3/LuaSnip/issues/78
+	region_check_events = "CursorMoved",
+	delete_check_events = "TextChanged",
 
-ls.config.set_config({
 	history = true,
 	updateevents = "TextChanged,TextChangedI",
 	enable_autosnippets = true,
-	delete_check_events = "TextChanged",
 	store_selection_keys = "<c-s>",
 	ext_opts = {
 		[types.choiceNode] = {
@@ -22,6 +24,8 @@ ls.config.set_config({
 		},
 	},
 })
+
+-- ls.filetype_set("cpp", { "c" })
 
 function _G.snippets_clear()
 	for m, _ in pairs(ls.snippets) do

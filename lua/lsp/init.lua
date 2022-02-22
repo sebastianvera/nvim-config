@@ -12,7 +12,7 @@ local on_attach = function(client, bufnr)
 	--            ]])
 	-- end
 
-  -- Turn off document formatting so we don't get a list with 2 options
+	-- Turn off document formatting so we don't get a list with 2 options
 	if client.name == "gopls" or client.name == "sumneko_lua" then
 		client.resolved_capabilities.document_formatting = false
 	end
@@ -50,7 +50,13 @@ local config = { on_attach = on_attach, capabilities = capabilities }
 -- Add more servers here
 local servers = {
 	sumneko_lua = configs.generate_sumneko_config(config),
-	"tsserver",
+	tsserver = {
+		on_attach = function(client, bufnr)
+			client.resolved_capabilities.document_formatting = false
+			client.resolved_capabilities.document_range_formatting = false
+			return on_attach(client, bufnr)
+		end,
+	},
 	"rust_analyzer",
 	"gopls",
 	emmet_ls = { filetypes = { "html", "css", "typescriptreact", "javascriptreact" } },

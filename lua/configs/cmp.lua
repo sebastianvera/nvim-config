@@ -2,25 +2,12 @@ local cmp = require("cmp")
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
 
-local t = function(str)
-	return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local luasnip = require("luasnip")
-
--- Do not jump to snippet if i'm outside of it
--- https://github.com/L3MON4D3/LuaSnip/issues/78
-luasnip.config.setup({
-	region_check_events = "CursorMoved",
-	delete_check_events = "TextChanged",
-})
-
 local lspkind = require("lspkind")
 
 cmp.setup({
-  window = {
-    completion = { border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }, scrollbar = "║" },
-  },
+	window = {
+		completion = { border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }, scrollbar = "║" },
+	},
 	documentation = {
 		border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
 		scrollbar = "║",
@@ -67,31 +54,31 @@ cmp.setup({
 	},
 
 	mapping = {
-    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<C-e>"] = cmp.mapping.close(),
-    ["<c-y>"] = cmp.mapping(
-      cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Insert,
-        select = true,
-      },
-      { "i", "c" }
-    ),
+		["<C-d>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		["<C-e>"] = cmp.mapping.close(),
+		["<c-y>"] = cmp.mapping(
+			cmp.mapping.confirm({
+				behavior = cmp.ConfirmBehavior.Insert,
+				select = true,
+			}),
+			{ "i", "c" }
+		),
 
-    ["<c-space>"] = cmp.mapping {
-      i = cmp.mapping.complete(),
-      c = function(
-        _ --[[fallback]]
-      )
-        if cmp.visible() then
-          if not cmp.confirm { select = true } then
-            return
-          end
-        else
-          cmp.complete()
-        end
-      end,
-    },
+		["<c-space>"] = cmp.mapping({
+			i = cmp.mapping.complete(),
+			c = function(
+				_ --[[fallback]]
+			)
+				if cmp.visible() then
+					if not cmp.confirm({ select = true }) then
+						return
+					end
+				else
+					cmp.complete()
+				end
+			end,
+		}),
 		["<Tab>"] = cmp.mapping.disable,
 	},
 	sources = {
@@ -107,8 +94,22 @@ cmp.setup({
 	},
 })
 
-require("cmp").setup.cmdline(":", {
+cmp.setup.cmdline(":", {
 	sources = {
 		{ name = "cmdline", keyword_length = 2 },
 	},
+})
+
+cmp.setup.cmdline("/", {
+	sources = {
+		{ name = "buffer" },
+	},
+})
+
+cmp.setup.filetype("gitcommit", {
+	sources = cmp.config.sources({
+		{ name = "cmp_git" },
+	}, {
+		{ name = "buffer" },
+	}),
 })
