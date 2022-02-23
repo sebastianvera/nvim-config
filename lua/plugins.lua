@@ -1,6 +1,7 @@
 require("packer").startup(function(use)
 	use({ "wbthomason/packer.nvim", opt = true })
 
+	use("tpope/vim-unimpaired")
 	use("tpope/vim-repeat")
 	use("tpope/vim-surround")
 	use("tpope/vim-vinegar")
@@ -97,6 +98,7 @@ require("packer").startup(function(use)
 					"rust",
 					"tsx",
 					"typescript",
+					"comment",
 				},
 				highlight = {
 					enable = true,
@@ -106,6 +108,10 @@ require("packer").startup(function(use)
 				},
 				autotag = {
 					enable = true,
+				},
+				matchup = {
+					enable = true, -- mandatory, false will disable the whole extension
+					disable = { "c", "ruby" }, -- optional, list of language that will be disabled
 				},
 				textobjects = {
 					move = {
@@ -149,6 +155,7 @@ require("packer").startup(function(use)
 			})
 		end,
 		requires = {
+			"andymass/vim-matchup",
 			{ "windwp/nvim-ts-autotag", after = "nvim-treesitter" },
 			{ "nvim-treesitter/nvim-treesitter-textobjects", after = "nvim-treesitter" },
 		},
