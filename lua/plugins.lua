@@ -257,7 +257,7 @@ require("packer").startup(function(use)
 		"folke/todo-comments.nvim",
 		requires = "nvim-lua/plenary.nvim",
 		config = function()
-			require("todo-comments").setup({})
+			require("todo-comments").setup({ keywords = { TODO = { alt = { "WIP" } } } })
 		end,
 	})
 
@@ -294,8 +294,7 @@ require("packer").startup(function(use)
 	})
 
 	use({
-		-- "kosayoda/nvim-lightbulb",
-		"/Users/rope/Code/nvim-lightbulb",
+		"kosayoda/nvim-lightbulb",
 		config = function()
 			require("nvim-lightbulb").setup({
 				ignore = { "null-ls" },
