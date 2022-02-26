@@ -11,7 +11,23 @@ require("packer").startup(function(use)
 	use({
 		"numToStr/Comment.nvim",
 		config = function()
-			require("Comment").setup()
+			require("Comment").setup({
+				pre_hook = function(ctx)
+					local U = require("Comment.utils")
+
+					local location = nil
+					if ctx.ctype == U.ctype.block then
+						location = require("ts_context_commentstring.utils").get_cursor_location()
+					elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+						location = require("ts_context_commentstring.utils").get_visual_start_location()
+					end
+
+					return require("ts_context_commentstring.internal").calculate_commentstring({
+						key = ctx.ctype == U.ctype.line and "__default" or "__multiline",
+						location = location,
+					})
+				end,
+			})
 		end,
 	})
 
@@ -113,6 +129,10 @@ require("packer").startup(function(use)
 					enable = true, -- mandatory, false will disable the whole extension
 					disable = { "c", "ruby" }, -- optional, list of language that will be disabled
 				},
+				context_commentstring = {
+					enable = true,
+					enable_autocmd = false,
+				},
 				textobjects = {
 					move = {
 						enable = true,
@@ -158,6 +178,7 @@ require("packer").startup(function(use)
 			"andymass/vim-matchup",
 			{ "windwp/nvim-ts-autotag", after = "nvim-treesitter" },
 			{ "nvim-treesitter/nvim-treesitter-textobjects", after = "nvim-treesitter" },
+			{ "JoosepAlviste/nvim-ts-context-commentstring", after = "nvim-treesitter" },
 		},
 	})
 

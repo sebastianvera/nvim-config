@@ -50,6 +50,7 @@ local config = { on_attach = on_attach, capabilities = capabilities }
 -- Add more servers here
 local servers = {
 	sumneko_lua = configs.generate_sumneko_config(config),
+	jsonls = configs.generate_jsonls_config(config),
 	tsserver = {
 		on_attach = function(client, bufnr)
 			client.resolved_capabilities.document_formatting = false
@@ -57,9 +58,9 @@ local servers = {
 			return on_attach(client, bufnr)
 		end,
 	},
+	emmet_ls = { filetypes = { "html", "css", "typescriptreact", "javascriptreact" } },
 	"rust_analyzer",
 	"gopls",
-	emmet_ls = { filetypes = { "html", "css", "typescriptreact", "javascriptreact" } },
 }
 
 -- Setup all servers from servers table
