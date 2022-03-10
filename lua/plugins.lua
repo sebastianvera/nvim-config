@@ -81,13 +81,6 @@ require("packer").startup(function(use)
 			{ "nvim-lua/popup.nvim" },
 			{ "nvim-lua/plenary.nvim" },
 			{
-				"nvim-telescope/telescope-file-browser.nvim",
-				after = "telescope.nvim",
-				config = function()
-					require("telescope").load_extension("file_browser")
-				end,
-			},
-			{
 				"nvim-telescope/telescope-project.nvim",
 				after = "telescope.nvim",
 				config = function()

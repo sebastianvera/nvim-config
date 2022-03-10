@@ -34,7 +34,6 @@ map("v", "J", ":m '>+1<CR>gv=gv", { noremap = true })
 
 -- Telescope: File mappings
 local telescope_map_opts = { noremap = true, silent = true, nowait = true }
-map("n", "-", "<cmd>Telescope file_browser<cr>", { noremap = true })
 map("n", "<leader>ff", [[<cmd>lua require("telescope.builtin").find_files()<cr>]], telescope_map_opts)
 map("n", "<leader>fr", [[<cmd>lua require("telescope.builtin").oldfiles()<cr>]], telescope_map_opts)
 map(
